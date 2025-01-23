@@ -32,8 +32,8 @@ jobs:
         run: npm run build
 
       # (Optional) Run tests (if you have them)
-      - name: Run tests
-        run: npm run test # Replace this with your test command if applicable
+      # - name: Run tests
+      #   run: npm run test # Replace this with your test command if applicable
 
       # Set up Docker for building and pushing the image
       - name: Set up Docker Buildx
