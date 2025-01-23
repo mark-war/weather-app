@@ -19,9 +19,8 @@ RUN npm install
 # Copy application source code
 COPY --chown=node:node . .
 
-# Set permissions dynamically for the dist directory
-# Use relative path (based on the current working directory)
-RUN icacls "/src/app/dist" /grant IIS_IUSRS:(OI)(CI)F /T
+# Set permissions for the dist directory (Linux way)
+RUN chown -R node:node /src/app/dist && chmod -R 755 /src/app/dist
 
 # Build the application
 RUN npm run build
