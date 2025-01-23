@@ -61,6 +61,7 @@ function App() {
                 Feels Like: {(weatherData.main.feels_like - 273.15).toFixed(1)}{" "}
                 °C
               </p>
+              <p>Humidity: {weatherData.main.humidity}</p>
               <p>
                 Weather: {weatherData.weather[0].main} (
                 {weatherData.weather[0].description})
