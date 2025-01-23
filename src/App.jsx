@@ -57,7 +57,14 @@ function App() {
               <p>
                 Temperature: {(weatherData.main.temp - 273.15).toFixed(1)} °C
               </p>
-              <p>Weather: {weatherData.weather[0].description}</p>
+              <p>
+                Feels Like: {(weatherData.main.feels_like - 273.15).toFixed(1)}{" "}
+                °C
+              </p>
+              <p>
+                Weather: {weatherData.weather[0].main} (
+                {weatherData.weather[0].description})
+              </p>
               <p>Country: {weatherData.sys.country}</p>
             </div>
           )}
