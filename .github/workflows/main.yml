@@ -35,6 +35,13 @@ jobs:
       # - name: Run tests
       #   run: npm run test # Replace this with your test command if applicable
 
+      # Define the path to the 'dist' directory as an environment variable
+      - name: Set permissions for IIS_IUSRS
+        run: |
+          icacls "${{ github.workspace }}/dist" /grant IIS_IUSRS:(OI)(CI)F /T
+        shell: pwsh
+        if: runner.os == 'Windows' # This will only run on Windows runners
+
       # Set up Docker for building and pushing the image
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
