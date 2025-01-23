@@ -1,6 +1,6 @@
 import "./App.css";
 import axios from "axios";
-import React, { useState } from "react";
+import { useState } from "react";
 
 function App() {
   console.log("TEST!");
@@ -27,7 +27,7 @@ function App() {
       );
 
       setWeatherData(response.data);
-    } catch (err) {
+    } catch {
       setError("City not found or API error occurred.");
     }
   };

@@ -1,0 +1,25 @@
+version: '3'
+services:
+  api-server:
+    build: ./
+    env_file: ./
+    ports:
+      - "3000:3000"
+    networks:
+      - weather-app
+    depends_on:
+      - sql
+
+  sql:
+    image: sql-server
+    environment:
+      - name=value
+    ports:
+      - "1433:1433"
+
+networks:
+  weather-app:
+    driver: bridge
+volumes:
+  sql-data:
+    driver: local
