@@ -17,4 +17,8 @@ export default defineConfig({
   build: {
     outDir: "dist",
   },
+  server: {
+    host: "0.0.0.0", // Bind to all network interfaces
+    port: 5173, // Port the app will run on
+  },
 });
