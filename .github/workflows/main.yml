@@ -55,9 +55,13 @@ jobs:
         run: |
           # Stop and remove the container only if it exists
           if [ $(docker ps -aq -f name=weather-app) ]; then
+            echo "Stopping and removing the existing container..."
             docker stop weather-app || true
             docker rm weather-app || true
           fi
+
+          # Run the container with the new image
+          echo "Running the new container..."
           docker run -d --name weather-app -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA
 
     # Deploy (Optional) - Add your deployment step here (e.g., push to AWS, Heroku, Kubernetes, etc.)
