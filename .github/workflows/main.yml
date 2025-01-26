@@ -31,36 +31,6 @@ jobs:
       - name: Build the application
         run: npm run build
 
-      # Debugging directory and permissions
-      - name: Check directory existence and permissions
-        run: |
-          if (Test-Path "C:\inetpub\wwwroot") {
-            Write-Host "Directory exists."
-          } else {
-            Write-Host "Directory does not exist!"
-          }
-        shell: pwsh
-
-      - name: Ensure weather-app directory exists
-        run: |
-          if (-not (Test-Path "C:\inetpub\wwwroot\weather-app")) {
-            New-Item -Path "C:\inetpub\wwwroot\weather-app" -ItemType Directory
-          }
-        shell: pwsh
-        if: runner.os == 'Windows'
-
-      - name: Copy files to IIS directory
-        run: |
-          xcopy /E /I /H /Y ${{ github.workspace }}/dist/* C:\inetpub\wwwroot\weather-app\
-        shell: pwsh
-        if: runner.os == 'Windows'
-
-      - name: Set permissions for IIS_IUSRS
-        run: |
-          icacls "C:\inetpub\wwwroot\weather-app" /grant IIS_IUSRS:(OI)(CI)F /T
-        shell: pwsh
-        if: runner.os == 'Windows'
-
       # Set up Docker for building and pushing the image
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -80,4 +50,4 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA
 
-    # Deploy (Optional) - Add your deployment step here (e.g., push to AWS, Heroku, etc.)
+    # Deploy (Optional) - Add your deployment step here (e.g., push to AWS, Heroku, Kubernetes, etc.)
