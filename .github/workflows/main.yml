@@ -40,8 +40,8 @@ jobs:
           if (-not (Test-Path "C:\inetpub\wwwroot\weather-app")) {
             New-Item -Path "C:\inetpub\wwwroot\weather-app" -ItemType Directory
           }
-          shell: pwsh
-          if: runner.os == 'Windows'
+        shell: pwsh
+        if: runner.os == 'Windows'
 
       - name: Copy files to IIS directory
         run: |
