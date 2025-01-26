@@ -35,12 +35,19 @@ jobs:
       # - name: Run tests
       #   run: npm run test # Replace this with your test command if applicable
 
-      # Copy the 'dist' folder contents to the IIS directory (assuming it's on the Windows runner)
+      - name: Ensure weather-app directory exists
+        run: |
+          if (-not (Test-Path "C:\inetpub\wwwroot\weather-app")) {
+            New-Item -Path "C:\inetpub\wwwroot\weather-app" -ItemType Directory
+          }
+          shell: pwsh
+          if: runner.os == 'Windows'
+
       - name: Copy files to IIS directory
         run: |
           xcopy /E /I /H /Y ${{ github.workspace }}/dist/* C:\inetpub\wwwroot\weather-app\
         shell: pwsh
-        if: runner.os == 'Windows' # This will run only on Windows runners
+        if: runner.os == 'Windows'
 
       # Define the path to the 'dist' directory as an environment variable
       - name: Set permissions for IIS_IUSRS
