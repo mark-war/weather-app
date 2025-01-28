@@ -17,7 +17,7 @@ function App() {
     setWeatherData(null);
 
     if (!city.trim()) {
-      setError("Please enter a city name!");
+      setError("Enter a city name...");
       return;
     }
 
