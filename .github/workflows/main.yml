@@ -44,16 +44,16 @@ jobs:
 
       # Build Docker image
       - name: Build Docker image
-        run: docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA .
+        run: docker build --no-cache -t ${{ secrets.DOCKER_USERNAME }}/weather-app:latest .
 
       # Push Docker image to Docker Hub
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/weather-app:latest
 
       # Run the container inside GitHub Actions
       - name: Run Docker container for debugging
         run: |
-          docker run -d --name debug-weather-app -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA
+          docker run -d --name debug-weather-app -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/weather-app:latest
           docker ps -a
           docker logs debug-weather-app
 

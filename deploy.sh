@@ -1,22 +1,28 @@
 #!/bin/bash
 
-# Variables
-DOCKER_USERNAME="war0404"
-IMAGE_TAG=$GITHUB_SHA  # Use GITHUB_SHA for the tag, or set it manually
+# Load environment variables from .env file
+set -a
+source .env
+set +a
+
+# Check if a tag is provided as an argument, otherwise use 'latest'
+IMAGE_TAG=${1:-latest}  # Default to 'latest' if no argument is provided
+
+# Stop and remove the existing container if it exists
+if [ $(docker ps -aq -f name=weather-app) ]; then
+  echo "Stopping and removing the existing container..."
+  docker stop weather-app || true
+  docker rm weather-app || true
+fi
 
 # Log in to Docker Hub
 echo "Logging in to Docker Hub..."
-docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
 
-# Pull the latest Docker image (replace with the actual commit SHA)
+# Pull the latest Docker image from Docker Hub
 echo "Pulling the latest Docker image..."
 docker pull $DOCKER_USERNAME/weather-app:$IMAGE_TAG
 
-# Stop and remove the existing container if it exists
-echo "Stopping and removing the existing container..."
-docker stop weather-app || true
-docker rm weather-app || true
-
-# Run the new container
+# Run the new container with the updated image
 echo "Running the new container..."
 docker run -d --name weather-app -p 5173:5173 $DOCKER_USERNAME/weather-app:$IMAGE_TAG
