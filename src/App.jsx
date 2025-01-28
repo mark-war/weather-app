@@ -35,7 +35,7 @@ function App() {
   return (
     <body>
       <div className="weather-search-container">
-        <h1 className="heading-main">Weather App</h1>
+        <h1 className="heading-main">Weather Application</h1>
         <form id="weatherForm" onSubmit={handleSubmit}>
           <input
             type="text"
@@ -46,7 +46,7 @@ function App() {
             aria-label="City Input"
           />
           <button type="submit" disabled={!city.trim()}>
-            Search
+            Search City
           </button>
         </form>
         <div className="messages">
