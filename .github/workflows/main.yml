@@ -50,18 +50,15 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA
 
-      # Run Docker container
-      - name: Run Docker container
+      # Run the container inside GitHub Actions
+      - name: Run Docker container for debugging
         run: |
-          # Stop and remove the container only if it exists
-          if [ $(docker ps -aq -f name=weather-app) ]; then
-            echo "Stopping and removing the existing container..."
-            docker stop weather-app || true
-            docker rm weather-app || true
-          fi
+          docker run -d --name debug-weather-app -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA
+          docker ps -a
+          docker logs debug-weather-app
 
-          # Run the container with the new image
-          echo "Running the new container..."
-          docker run -d --name weather-app -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/weather-app:$GITHUB_SHA
+      # Inspect the contianer filesystem
+      - name: Inspect container filesystem
+        run: docker exec debug-weather-app ls -l /src/app/dist
 
     # Deploy (Optional) - Add your deployment step here (e.g., push to AWS, Heroku, Kubernetes, etc.)
