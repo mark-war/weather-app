@@ -50,15 +50,12 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/weather-app:latest
 
-      # Run the container inside GitHub Actions
-      - name: Run Docker container for debugging
+      # Trigger deploy.sh to deploy to IIS server
+      - name: Deploy to IIS Server
         run: |
-          docker run -d --name debug-weather-app -p 5173:5173 ${{ secrets.DOCKER_USERNAME }}/weather-app:latest
-          docker ps -a
-          docker logs debug-weather-app
-
-      # Inspect the contianer filesystem
-      - name: Inspect container filesystem
-        run: docker exec debug-weather-app ls -l /src/app/dist
+          sshpass -p ${{ secrets.IIS_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.IIS_USERNAME }}@${{ secrets.IIS_SERVER }} 'bash -s' < ./deploy.sh
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     # Deploy (Optional) - Add your deployment step here (e.g., push to AWS, Heroku, Kubernetes, etc.)
