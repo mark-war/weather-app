@@ -50,12 +50,25 @@ jobs:
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/weather-app:latest
 
-      # Trigger deploy.sh to deploy to IIS server
+      - name: Debug SSH Connection
+        run: |
+          echo "Attempting SSH login..."
+          ssh -v ${{ secrets.IIS_USERNAME }}@${{ secrets.IIS_SERVER }} || echo "SSH login failed."
+
+      - name: Set up SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.IIS_SERVER }} >> ~/.ssh/known_hosts
+
+      - name: Verify SSH Connection
+        run: |
+          echo "Testing SSH connection after key setup..."
+          ssh -o StrictHostKeyChecking=no ${{ secrets.IIS_USERNAME }}@${{ secrets.IIS_SERVER }} "echo 'SSH Connection Successful'"
+
       - name: Deploy to IIS Server
         run: |
-          sshpass -p ${{ secrets.IIS_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.IIS_USERNAME }}@${{ secrets.IIS_SERVER }} 'bash -s' < ./deploy.sh
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          ssh -o StrictHostKeyChecking=no ${{ secrets.IIS_USERNAME }}@${{ secrets.IIS_SERVER }} 'bash -s' < ./deploy.sh
 
     # Deploy (Optional) - Add your deployment step here (e.g., push to AWS, Heroku, Kubernetes, etc.)
